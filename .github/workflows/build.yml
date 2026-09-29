@@ -1,0 +1,35 @@
+name: Build WingsSizePlugin
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Unpack source
+        run: |
+          mkdir project
+          unzip -q WingsSizePlugin-1.1.0-GitHub-ready.zip -d project
+
+      - name: Build
+        run: |
+          cd project
+          gradle build
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: WingsSizePlugin-JAR
+          path: project/build/libs/*.jar
